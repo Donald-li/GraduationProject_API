@@ -25,10 +25,11 @@ class UsersController < ApplicationController
     @user = User.new
     begin
       @user = User.find_by(account: params[:account])
+      @articles = @user.articles.all
       if @user.password != params[:password]
         render json:{msg:'密码错误！'}
       else
-        render json:@user
+        render json: { user:@user, articles:@articles}
       end
     rescue
       render json:{msg:'此账号不存在！'}

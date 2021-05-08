@@ -6,6 +6,7 @@ class CreateArticles < ActiveRecord::Migration[6.1]
       t.float :score
       t.integer :section
       t.integer :thumbs
+      t.references :user, null: false, foreign_key: true
 
       t.timestamps
     end

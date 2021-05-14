@@ -1,4 +1,5 @@
-class UsersController < ApplicationController
+class UsersController < ManageBaseController
+
   def index
     @users = User.all
     render json:@users
@@ -29,10 +30,12 @@ class UsersController < ApplicationController
       if @user.password != params[:password]
         render json:{msg:'密码错误！'}
       else
-        render json: { user:@user, articles:@articles}
+        session[:user_id] = @user.id
+        render json: { user:@user, user_articles:@articles}
       end
     rescue
       render json:{msg:'此账号不存在！'}
     end
   end
+
 end

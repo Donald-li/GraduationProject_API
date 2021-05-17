@@ -43,4 +43,28 @@ class UsersController < ManageBaseController
     render json: User.find(session[:user_id])
   end
 
+  #获得当前用户所发表的文章
+  def get_articles
+    @user = User.find(params[:id])
+    @articles = @user.articles.all
+    render json: @articles
+  end
+
+  #获得当前用户的收藏文章列表
+  def get_star_articles
+    @user = User.find(params[:id])
+    @star_articles = @user.star_articles.all
+    render json: @star_articles.to_json(:include => :user)
+  end
+
+  #获取当前用户所关注用户列表
+  def get_follow_user
+    @user = User.find(params[:id])
+    @fl= @user.followers.includes(:user).all
+    # @fl.each do |f|
+    #   @follow_users = @follow_users + {f.user.id => f.user}
+    # end
+    render json:@fl.to_json(:include => :user)
+  end
+
 end

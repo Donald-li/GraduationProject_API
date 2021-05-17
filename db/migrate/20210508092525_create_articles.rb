@@ -7,6 +7,7 @@ class CreateArticles < ActiveRecord::Migration[6.1]
       t.integer :section
       t.integer :thumbs
       t.references :user, null: false, foreign_key: true
+      t.references :collector,index: true
 
       t.timestamps
     end

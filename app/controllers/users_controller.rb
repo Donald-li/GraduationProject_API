@@ -1,4 +1,5 @@
 class UsersController < ManageBaseController
+  before_action :logged_in?,only:[:show,:current_user]
 
   def index
     @users = User.all
@@ -21,7 +22,7 @@ class UsersController < ManageBaseController
       @user.save
     end
   end
-
+  #登陆方法
   def login
     @user = User.new
     begin
@@ -36,6 +37,10 @@ class UsersController < ManageBaseController
     rescue
       render json:{msg:'此账号不存在！'}
     end
+  end
+  #获得当前登陆用户
+  def current_user
+    render json: User.find(session[:user_id])
   end
 
 end

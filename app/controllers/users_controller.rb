@@ -15,8 +15,7 @@ class UsersController < ManageBaseController
     @user.name = get_user[:name]
     @user.password = get_user[:pass]
     @user.rule = get_user[:rule]
-    avatar = get_user[:avatar]
-    @user.img = uploadfile(avatar)
+    @user.img = get_user[:imageUrl]
     if User.find_by(name: @user.name).present?
       render json:{msg:'账号昵称已存在！'}
     else
@@ -82,7 +81,8 @@ class UsersController < ManageBaseController
       File.open("#{Rails.root}/public/upload/#{@filename}", "wb") do |f|
         f.write(file.read)
       end
-      return @filename
+      # return "#{Rails.root}/public/upload/#{@filename}"
+      render json: { 'FileURL'=>"/api/upload/#{@filename}" }
     end
   end
 

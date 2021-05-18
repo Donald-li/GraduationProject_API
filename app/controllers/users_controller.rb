@@ -11,15 +11,17 @@ class UsersController < ManageBaseController
   end
   def create
     @user = User.new
-    @user.account = params[:account]
-    @user.name = params[:name]
-    @user.password = params[:password]
-    @user.rule = params[:rule]
-    @user.img = params[:img]
+    @user.account = get_user[:account]
+    @user.name = get_user[:name]
+    @user.password = get_user[:pass]
+    @user.rule = get_user[:rule]
+    avatar = get_user[:avatar]
+    @user.img = uploadfile(avatar)
     if User.find_by(name: @user.name).present?
-      @user.errors
+      render json:{msg:'账号昵称已存在！'}
     else
       @user.save
+      render json:{msg:'创建成功！'}
     end
   end
   #登陆方法
@@ -65,6 +67,28 @@ class UsersController < ManageBaseController
     #   @follow_users = @follow_users + {f.user.id => f.user}
     # end
     render json:@fl.to_json(:include => :user)
+  end
+
+  #缓存上传的文件
+  def uploadfile
+    #获得前端传来的文件
+    file = params[:file]
+    if !file.original_filename.empty?
+      @filename = file.original_filename
+      #设置目录路径，如果目录不存在，生成新目录
+      FileUtils.mkdir("#{Rails.root}/public/upload") unless File.exist?("#{Rails.root}/public/upload")
+      #写入文件
+      ##wb 表示通过二进制方式写，可以保证文件不损坏
+      File.open("#{Rails.root}/public/upload/#{@filename}", "wb") do |f|
+        f.write(file.read)
+      end
+      return @filename
+    end
+  end
+
+  private
+  def get_user
+    params.require(:ruleForm).permit(:pass,:account,:name,:rule,:imageUrl)
   end
 
 end

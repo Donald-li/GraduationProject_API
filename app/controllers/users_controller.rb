@@ -23,6 +23,18 @@ class UsersController < ManageBaseController
       render json:{msg:'创建成功！'}
     end
   end
+  def update
+    @user = User.find(get_update_user[:id])
+    @user.account = get_update_user[:account]
+    @user.name = get_update_user[:name]
+    @user.password = get_update_user[:password]
+    @user.img = get_update_user[:img]
+    if @user.save
+      render json: {'msg'=>'修改成功！'}
+    else
+      render json: {'msg'=>'修改失败！'}
+    end
+  end
   #登陆方法
   def login
     @user = User.new
@@ -68,7 +80,7 @@ class UsersController < ManageBaseController
     render json:@fl.to_json(:include => :user)
   end
 
-  #缓存上传的文件
+  #获取上传的文件
   def uploadfile
     #获得前端传来的文件
     file = params[:file]
@@ -81,14 +93,18 @@ class UsersController < ManageBaseController
       File.open("#{Rails.root}/public/upload/#{@filename}", "wb") do |f|
         f.write(file.read)
       end
-      # return "#{Rails.root}/public/upload/#{@filename}"
       render json: { 'FileURL'=>"/api/upload/#{@filename}" }
     end
   end
 
   private
   def get_user
-    params.require(:ruleForm).permit(:pass,:account,:name,:rule,:imageUrl)
+    params.require(:ruleForm).permit(:pass,:account,:name,:rule,:img)
+  end
+
+  private
+  def get_update_user
+    params.require(:ruleForm).permit(:id,:password,:account,:name,:rule,:img)
   end
 
 end

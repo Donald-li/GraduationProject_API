@@ -56,11 +56,16 @@ class UsersController < ManageBaseController
     render json: User.find(session[:user_id])
   end
 
-  #获得当前用户所发表的文章
+  #按页获得当前用户所发表的文章
   def get_articles
     @user = User.find(params[:id])
-    @articles = @user.articles.all
-    render json: @articles
+    offset = params[:offset].to_i
+    pagesize = params[:pagesize].to_i
+    total = @user.articles.ids.count
+    offset = offset*pagesize
+    @articles = @user.articles.find_by_page(offset,pagesize).sorted
+
+    render json: { 'articles'=> @articles,'total'=>total }
   end
 
   #获得当前用户的收藏文章列表

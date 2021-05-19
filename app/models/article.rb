@@ -13,4 +13,14 @@ class Article < ApplicationRecord
 
   enum section: {movie:1,game:2,music:3,dance:4,food:5,comic:6}
 
+  scope :sorted, -> {order(created_at: :desc)}
+  scope :reverse_sorted, -> {sorted.reverse_order}
+
+  scope :sorted_score, -> {order(score: :desc)}
+  scope :reverse_sorted_score, -> {sorted.reverse_order}
+
+  def self.find_by_page(offset,pagesize)
+    self.limit(pagesize).offset(offset)
+  end
+
 end

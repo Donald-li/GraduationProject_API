@@ -18,10 +18,17 @@ class ArticlesController < ManageBaseController
     end
   end
 
+  def show_by_page_index
+    offset = params[:offset]
+    pagesize = param[:pagesize]
+
+    @articles = Article.all.find_by_page(offset,pagesize).reverse_sorted
+  end
+
   #接收上传的图片
   def upload_img
     #获得前端传来的文件
-    file = params[:image]
+    file = params[:file]
     if !file.original_filename.empty?
       @filename = file.original_filename
       #设置目录路径，如果目录不存在，生成新目录

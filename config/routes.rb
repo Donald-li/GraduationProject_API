@@ -3,12 +3,13 @@ Rails.application.routes.draw do
 
   resources :articles do
     post 'upload_img',to:'articles#upload_img',on: :collection
+    get 'show_by_page_index',to:'articles#show_by_page_index',on: :collection
   end
   resources :users do
     resources :articles
     post :login, on: :collection
     get :current_user, on: :collection
-    get 'get_articles/:id',to:'users#get_articles', on: :collection
+    get 'get_articles/:id/:offset/:pagesize',to:'users#get_articles', on: :collection
     get 'get_star_articles/:id',to:'users#get_star_articles',on: :collection
     get 'get_follow_user/:id',to:'users#get_follow_user',on: :collection
     post 'uploadfile',to:'users#uploadfile',on: :collection

@@ -10,7 +10,6 @@
 
 class Article < ApplicationRecord
   belongs_to :user
-  belongs_to :collector,class_name: "User",foreign_key:"collector_id"
 
   enum section: {movie:1,game:2,music:3,dance:4,food:5,comic:6}
 

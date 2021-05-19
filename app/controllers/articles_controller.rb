@@ -18,6 +18,23 @@ class ArticlesController < ManageBaseController
     end
   end
 
+  #接收上传的图片
+  def upload_img
+    #获得前端传来的文件
+    file = params[:image]
+    if !file.original_filename.empty?
+      @filename = file.original_filename
+      #设置目录路径，如果目录不存在，生成新目录
+      FileUtils.mkdir("#{Rails.root}/public/upload") unless File.exist?("#{Rails.root}/public/upload")
+      #写入文件
+      ##wb 表示通过二进制方式写，可以保证文件不损坏
+      File.open("#{Rails.root}/public/upload/#{@filename}", "wb") do |f|
+        f.write(file.read)
+      end
+      render json: { "errno": 0, "data" => ["url" =>"/api/upload/#{@filename}"] }
+    end
+  end
+
   private
   def attach_article
     params.require(:article).permit(:title,:body,:section,:user_id)

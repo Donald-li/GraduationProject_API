@@ -1,7 +1,9 @@
 Rails.application.routes.draw do
   # For details on the DSL available within this file, see https://guides.rubyonrails.org/routing.html
 
-  resources :articles
+  resources :articles do
+    post 'upload_img',to:'articles#upload_img',on: :collection
+  end
   resources :users do
     resources :articles
     post :login, on: :collection

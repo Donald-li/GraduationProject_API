@@ -18,6 +18,18 @@ class ArticlesController < ManageBaseController
       render json:{'msg':'创建失败！'}
     end
   end
+  def update
+    @article = Article.find(attach_edit_article[:id])
+    @article.title = attach_edit_article[:title]
+    @article.body = attach_edit_article[:body]
+    @article.section = attach_edit_article[:section]
+    
+    if @article.save
+      render json:{msg:'修改成功！'}
+    else
+      render json:{msg:'修改失败！'}
+    end
+  end
   def destroy
     @article = Article.find(params[:id])
     if @article.destroy
@@ -26,6 +38,11 @@ class ArticlesController < ManageBaseController
       render json:{'msg':'删除失败！'}
     end
 
+  end
+
+  def show_article
+    @article = Article.find(params[:id])
+    render json:{"article":@article}
   end
 
   def show_by_page_index
@@ -55,5 +72,9 @@ class ArticlesController < ManageBaseController
   private
   def attach_article
     params.require(:article).permit(:title,:body,:section,:user_id)
+  end
+  private
+  def attach_edit_article
+    params.require(:article).permit(:id,:title,:body,:section,:score,:thumbs,:user_id)
   end
 end

@@ -126,6 +126,19 @@ class UsersController < ManageBaseController
     end
 
   end
+  #取消关注用户
+  def unfocues
+    @user = User.find(params[:uid])
+    @follower = User.find(params[:fid])
+
+    @fl = FocuesRelation.where("user_id = :user and follower_id = :follower",{user:@user.id,follower:@follower.id}).first
+    if @fl.destroy
+      render json:{msg:'删除成功！'}
+    else
+      render json:{msg:'删除失败！'}
+    end
+
+  end
 
   private
   def get_user

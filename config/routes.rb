@@ -15,6 +15,7 @@ Rails.application.routes.draw do
     get 'get_follow_user/:id',to:'users#get_follow_user',on: :collection
     get 'get_session_user/:id',to:'users#get_session_user',on: :collection
     get 'focues_user/:uid/:fid',to:'users#focues_user',on: :collection
+    delete 'unfocues/:uid/:fid',to:'users#unfocues',on: :collection
     post 'uploadfile',to:'users#uploadfile',on: :collection
   end
 

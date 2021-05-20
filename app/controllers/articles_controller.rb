@@ -1,4 +1,5 @@
 class ArticlesController < ManageBaseController
+  before_action :logged_in?,only:[:destroy]
   def show
     @article = Article.find(params[:id])
     render json:@article.to_json(:include => :user)
@@ -16,6 +17,15 @@ class ArticlesController < ManageBaseController
     else
       render json:{'msg':'创建失败！'}
     end
+  end
+  def destroy
+    @article = Article.find(params[:id])
+    if @article.destroy
+      render json:{'msg':'删除成功！'}
+    else
+      render json:{'msg':'删除失败！'}
+    end
+
   end
 
   def show_by_page_index

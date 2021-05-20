@@ -1,5 +1,5 @@
 class UsersController < ManageBaseController
-  before_action :logged_in?,only:[:show,:current_user]
+  # before_action :logged_in?,only:[:show]
 
   def index
     @users = User.all
@@ -18,6 +18,9 @@ class UsersController < ManageBaseController
     @user.img = get_user[:imageUrl]
     if User.find_by(name: @user.name).present?
       render json:{msg:'账号昵称已存在！'}
+    end
+    if User.find_by(account:@user.account).present?
+      render json:{msg:'账号已存在！'}
     else
       @user.save
       render json:{msg:'创建成功！'}
@@ -53,7 +56,13 @@ class UsersController < ManageBaseController
   end
   #获得当前登陆用户
   def current_user
-    render json: User.find(session[:user_id])
+    if logged_in?
+      @user = User.find(session[:user_id])
+      @articles = @user.articles.all
+      render json: { msg:1,user:User.find(session[:user_id]),user_articles:@articles }
+    else
+      render json: { msg:2 }
+    end
   end
 
   #按页获得当前用户所发表的文章

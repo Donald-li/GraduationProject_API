@@ -3,11 +3,8 @@ class ApplicationController < ActionController::API
   #判断是否登陆
   protected
   def logged_in?
-    if session[:user_id].present?
-      return true
-    else
-      return false
-      # redirect_to account_login_path
+    unless session[:user_id].present?
+      redirect_to 'http://localhost:1024/#/index'
     end
   end
   #要求登陆方法，过滤未登录情况

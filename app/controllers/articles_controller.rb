@@ -23,7 +23,7 @@ class ArticlesController < ManageBaseController
     @article.title = attach_edit_article[:title]
     @article.body = attach_edit_article[:body]
     @article.section = attach_edit_article[:section]
-    
+
     if @article.save
       render json:{msg:'修改成功！'}
     else
@@ -50,6 +50,12 @@ class ArticlesController < ManageBaseController
     pagesize = param[:pagesize]
 
     @articles = Article.all.find_by_page(offset,pagesize).reverse_sorted
+  end
+
+  #搜索功能
+  def search
+    @articles = Article.where("title like :array",{array:'%'+params[:array]+'%'})
+    render json:@articles.to_json(:include=>:user)
   end
 
   #接收上传的图片

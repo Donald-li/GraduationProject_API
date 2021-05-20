@@ -38,6 +38,15 @@ class UsersController < ManageBaseController
       render json: {'msg'=>'修改失败！'}
     end
   end
+  def get_session_user
+    begin
+      @user = User.find(params[:id])
+      @articles = @user.articles.all
+      render json: { user:@user, user_articles:@articles}
+    rescue
+      render json:{msg:'此账号不存在！'}
+    end
+  end
   #登陆方法
   def login
     @user = User.new
@@ -47,21 +56,11 @@ class UsersController < ManageBaseController
       if @user.password != params[:password]
         render json:{msg:'密码错误！'}
       else
-        session[:user_id] = @user.id
+        # session[:user_id] = @user.id
         render json: { user:@user, user_articles:@articles}
       end
     rescue
       render json:{msg:'此账号不存在！'}
-    end
-  end
-  #获得当前登陆用户
-  def current_user
-    if logged_in?
-      @user = User.find(session[:user_id])
-      @articles = @user.articles.all
-      render json: { msg:1,user:User.find(session[:user_id]),user_articles:@articles }
-    else
-      render json: { msg:2 }
     end
   end
 

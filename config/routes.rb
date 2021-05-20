@@ -14,6 +14,7 @@ Rails.application.routes.draw do
     get 'get_star_articles/:id',to:'users#get_star_articles',on: :collection
     get 'get_follow_user/:id',to:'users#get_follow_user',on: :collection
     get 'get_session_user/:id',to:'users#get_session_user',on: :collection
+    get 'focues_user/:uid/:fid',to:'users#focues_user',on: :collection
     post 'uploadfile',to:'users#uploadfile',on: :collection
   end
 

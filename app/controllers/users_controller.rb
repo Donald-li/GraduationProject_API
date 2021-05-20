@@ -110,6 +110,23 @@ class UsersController < ManageBaseController
     end
   end
 
+  #关注用户
+  def focues_user
+    @user = User.find(params[:uid])
+    @follower = User.find(params[:fid])
+
+    @fl = FocuesRelation.new
+    @fl.user = @user
+    @fl.follower = @follower
+
+    if @fl.save
+      render json:{msg:'关注成功！'}
+    else
+      render json:{msg:'关注失败！'}
+    end
+
+  end
+
   private
   def get_user
     params.require(:ruleForm).permit(:pass,:account,:name,:rule,:img)

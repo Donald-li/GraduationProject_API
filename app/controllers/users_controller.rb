@@ -83,10 +83,12 @@ class UsersController < ManageBaseController
     render json: @star_articles.to_json(:include => :user)
   end
 
-  #获取当前用户所关注用户列表
+  #获取当前用户所关注用户列表(分页)
   def get_follow_user
     @user = User.find(params[:id])
-    @fl= @user.followers.includes(:user).all
+    pagesize = params[:pagesize]
+    offset = params[:offset]
+    @fl= @user.followers.includes(:user).all.find_by_page(offset,pagesize)
     # @fl.each do |f|
     #   @follow_users = @follow_users + {f.user.id => f.user}
     # end
@@ -133,9 +135,23 @@ class UsersController < ManageBaseController
 
     @fl = FocuesRelation.where("user_id = :user and follower_id = :follower",{user:@user.id,follower:@follower.id}).first
     if @fl.destroy
-      render json:{msg:'删除成功！'}
+      render json:{msg:'取关成功！'}
     else
-      render json:{msg:'删除失败！'}
+      render json:{msg:'取关失败！'}
+    end
+  end
+
+  #判断是否为已关注用户，是返回1，不是返回2
+  def isFocues
+    @article = Article.find(params[:aid])
+    uid = User.find(@article.user.id).id
+    @user = User.find(uid)
+    @follower = User.find(params[:fid])
+
+    if @fl = FocuesRelation.where("user_id = :user and follower_id = :follower",{user:@user.id,follower:@follower.id}).first
+      render json:{msg:1}
+    else
+      render json:{msg:2}
     end
 
   end

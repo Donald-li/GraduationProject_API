@@ -1,5 +1,5 @@
 class ArticlesController < ManageBaseController
-  before_action :logged_in?,only:[:destroy]
+  # before_action :logged_in?,only:[:destroy]
 
   def show
     @article = Article.find(params[:id])

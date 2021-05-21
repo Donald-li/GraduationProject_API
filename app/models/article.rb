@@ -9,7 +9,7 @@
 # collector     ：user              收藏者
 
 class Article < ApplicationRecord
-  belongs_to :user, dependent: :destroy
+  belongs_to :user
 
   enum section: {movie:1,game:2,music:3,dance:4,food:5,comic:6}
 

@@ -246,7 +246,7 @@ class UsersController < ManageBaseController
     @tl = ThumbRelation.where("user_id = :uid and article_id = :aid",{uid:params[:uid],aid:params[:aid]}).first
     if @tl.destroy
       thumbs = ThumbRelation.where("article_id = :aid",{aid:params[:aid]}).count
-      @article.thumbs = thumbs+@article.thumbs-1
+      @article.thumbs = thumbs-1
       if @article.save
         render json:{msg:'取消点赞成功！'}
       else

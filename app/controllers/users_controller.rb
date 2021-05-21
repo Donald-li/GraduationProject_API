@@ -192,8 +192,8 @@ class UsersController < ManageBaseController
       render json:{msg:'您已经点过赞啦！',flag:0}
     else
       if @tl.save
-        totalThumb = ThumbRelation.where("article_id = :aid",{aid:@article.id}).count
-        @article.thumbs = totalThumb+@article.thumbs
+        # totalThumb = ThumbRelation.where("article_id = :aid",{aid:@article.id}).count
+        @article.thumbs = @article.thumbs+1
         if @article.save
           render json:{msg:'点赞成功！',flag:1}
         else
@@ -245,8 +245,7 @@ class UsersController < ManageBaseController
 
     @tl = ThumbRelation.where("user_id = :uid and article_id = :aid",{uid:params[:uid],aid:params[:aid]}).first
     if @tl.destroy
-      thumbs = ThumbRelation.where("article_id = :aid",{aid:params[:aid]}).count
-      @article.thumbs = thumbs-1
+      @article.thumbs = @article.thumbs-1
       if @article.save
         render json:{msg:'取消点赞成功！'}
       else

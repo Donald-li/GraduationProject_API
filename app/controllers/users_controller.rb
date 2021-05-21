@@ -76,22 +76,12 @@ class UsersController < ManageBaseController
     render json: { 'articles'=> @articles,'total'=>total }
   end
 
-  #获得当前用户的收藏文章列表
-  def get_star_articles
-    @user = User.find(params[:id])
-    @star_articles = @user.star_articles.all
-    render json: @star_articles.to_json(:include => :user)
-  end
-
   #获取当前用户所关注用户列表(分页)
   def get_follow_user
     @user = User.find(params[:id])
     pagesize = params[:pagesize]
     offset = params[:offset]
     @fl= @user.followers.includes(:user).all.find_by_page(offset,pagesize)
-    # @fl.each do |f|
-    #   @follow_users = @follow_users + {f.user.id => f.user}
-    # end
     render json:@fl.to_json(:include => :user)
   end
 
@@ -233,8 +223,51 @@ class UsersController < ManageBaseController
         render json:{msg:'收藏失败！',flag:2}
       end
     end
+  end
+
+  #用户取消收藏文章
+  def uncollect
+    @user = User.find(params[:uid])
+    @article = Article.find(params[:aid])
+
+    @cl = CollectRelation.where("user_id = :uid and article_id = :aid",{uid:@user.id,aid:@article.id}).first
+
+    if @cl.destroy
+      render json:{msg:'取消收藏成功！'}
+    else
+      render json:{msg:'取消收藏失败！'}
+    end
 
   end
+
+  #获得用户收藏的所有文章（分页）
+  def get_collect_page
+    @user = User.find(params[:uid])
+    pagesize = params[:pagesize]
+    offset = params[:offset]
+
+    @cl = @user.collect_relations.includes(:article).all.find_by_page(offset,pagesize).sorted
+
+    render json:@cl.to_json(:include => { :article => {:include => :user} })
+  end
+
+  #获得用户收藏文章的总数
+  def get_collect_count
+    @user = User.find(params[:uid])
+    total = @user.collect_relations.count
+
+    render json:{total:total}
+  end
+
+  #获得用户关注用户的总数
+  def get_focues_count
+    @user = User.find(params[:uid])
+    total = @user.followers.all.count
+
+    render json:{total:total}
+  end
+
+
 
   private
   def get_user

@@ -14,7 +14,7 @@ class User < ApplicationRecord
 
   has_many :score_relations,dependent: :destroy
   has_many :thumb_relations,dependent: :destroy
-  has_many :collect_relation,dependent: :destroy
+  has_many :collect_relations,dependent: :destroy
 
   has_many :focues_relations,dependent: :destroy
   has_many :followers,class_name: "FocuesRelation",foreign_key:"follower_id",dependent: :destroy

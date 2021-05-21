@@ -237,6 +237,24 @@ class UsersController < ManageBaseController
     else
       render json:{msg:'取消收藏失败！'}
     end
+  end
+
+  #用户取消点赞
+  def unthumb
+    @article = Article.find(params[:aid])
+
+    @tl = ThumbRelation.where("user_id = :uid and article_id = :aid",{uid:params[:uid],aid:params[:aid]}).first
+    if @tl.destroy
+      thumbs = ThumbRelation.where("article_id = :aid",{aid:params[:aid]}).count
+      @article.thumbs = thumbs+@article.thumbs-1
+      if @article.save
+        render json:{msg:'取消点赞成功！'}
+      else
+        render json:{msg:'取消点赞保存失败！'}
+      end
+    else
+      render json:{msg:'取消点赞失败！'}
+    end
 
   end
 
@@ -267,7 +285,29 @@ class UsersController < ManageBaseController
     render json:{total:total}
   end
 
+  #判断是否点赞过文章：1-已点赞，2-未点赞
+  def isThumb
+    @user = User.find(params[:uid])
+    @article = Article.find(params[:aid])
 
+    if ThumbRelation.where("user_id = :uid and article_id = :aid",{uid:@user.id,aid:@article.id}).present?
+      render json:{msg:'您已经点过赞啦！',flag:1}
+    else
+      render json:{msg:'还未点过赞！',flag:2}
+    end
+  end
+
+  #判断是否收藏过此文章：1-已收藏，2-未收藏
+  def isCollect
+    @user = User.find(params[:uid])
+    @article = Article.find(params[:aid])
+
+    if CollectRelation.where("user_id = :uid and article_id = :aid",{uid:@user.id,aid:@article.id})
+      render json:{msg:'您已经收藏过啦！',flag:1}
+    else
+      render json:{msg:'还未收藏！',flag:2}
+    end
+  end
 
   private
   def get_user

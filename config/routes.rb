@@ -22,7 +22,10 @@ Rails.application.routes.draw do
     get 'get_collect_page/:uid/:offset/:pagesize',to:'users#get_collect_page',on: :collection
     get 'get_collect_count/:uid',to:'users#get_collect_count',on: :collection
     get 'get_focues_count/:uid',to:'users#get_focues_count',on: :collection
+    get 'isThumb/:uid/:aid',to:'users#isThumb',on: :collection
+    get 'isCollect/:uid/:aid',to:'users#isCollect',on: :collection
     delete 'uncollect/:uid/:aid',to:'users#uncollect',on: :collection
+    delete 'unthumb/:uid/:aid',to:'users#unthumb',on: :collection
     delete 'unfocues/:uid/:fid',to:'users#unfocues',on: :collection
     post 'uploadfile',to:'users#uploadfile',on: :collection
   end

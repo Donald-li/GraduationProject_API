@@ -189,6 +189,53 @@ class UsersController < ManageBaseController
     end
   end
 
+  #用户给文章点赞
+  def user_thumb_article
+    @user = User.find(params[:uid])
+    @article = Article.find(params[:aid])
+
+    @tl = ThumbRelation.new
+    @tl.user = @user
+    @tl.article = @article
+
+    if ThumbRelation.where("user_id = :uid and article_id = :aid",{uid:@user.id,aid:@article.id}).present?
+      render json:{msg:'您已经点过赞啦！',flag:0}
+    else
+      if @tl.save
+        totalThumb = ThumbRelation.where("article_id = :aid",{aid:@article.id}).count
+        @article.thumbs = totalThumb+@article.thumbs
+        if @article.save
+          render json:{msg:'点赞成功！',flag:1}
+        else
+          render json:{msg:'点赞保存失败！',flag:2}
+        end
+      else
+        render json:{msg:'点赞失败！',flag:3}
+      end
+    end
+  end
+
+  #用户收藏文章
+  def user_collect_article
+    @user = User.find(params[:uid])
+    @article = Article.find(params[:aid])
+
+    @cl = CollectRelation.new
+    @cl.user = @user
+    @cl.article = @article
+
+    if CollectRelation.where("user_id = :uid and article_id = :aid",{uid:@user.id,aid:@article.id}).present?
+      render json:{msg:'您已经收藏啦！',flag:0}
+    else
+      if @cl.save
+        render json:{msg:'收藏成功！',flag:1}
+      else
+        render json:{msg:'收藏失败！',flag:2}
+      end
+    end
+
+  end
+
   private
   def get_user
     params.require(:ruleForm).permit(:pass,:account,:name,:rule,:img)

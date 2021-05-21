@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2021_05_21_094638) do
+ActiveRecord::Schema.define(version: 2021_05_21_112105) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -25,6 +25,15 @@ ActiveRecord::Schema.define(version: 2021_05_21_094638) do
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
     t.index ["user_id"], name: "index_articles_on_user_id"
+  end
+
+  create_table "collect_relations", force: :cascade do |t|
+    t.bigint "user_id", null: false
+    t.bigint "article_id", null: false
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.index ["article_id"], name: "index_collect_relations_on_article_id"
+    t.index ["user_id"], name: "index_collect_relations_on_user_id"
   end
 
   create_table "focues_relations", force: :cascade do |t|
@@ -46,6 +55,15 @@ ActiveRecord::Schema.define(version: 2021_05_21_094638) do
     t.index ["user_id"], name: "index_score_relations_on_user_id"
   end
 
+  create_table "thumb_relations", force: :cascade do |t|
+    t.bigint "user_id", null: false
+    t.bigint "article_id", null: false
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.index ["article_id"], name: "index_thumb_relations_on_article_id"
+    t.index ["user_id"], name: "index_thumb_relations_on_user_id"
+  end
+
   create_table "users", force: :cascade do |t|
     t.text "account"
     t.text "name"
@@ -57,6 +75,10 @@ ActiveRecord::Schema.define(version: 2021_05_21_094638) do
   end
 
   add_foreign_key "articles", "users"
+  add_foreign_key "collect_relations", "articles"
+  add_foreign_key "collect_relations", "users"
   add_foreign_key "score_relations", "articles"
   add_foreign_key "score_relations", "users"
+  add_foreign_key "thumb_relations", "articles"
+  add_foreign_key "thumb_relations", "users"
 end

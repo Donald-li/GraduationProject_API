@@ -17,6 +17,8 @@ Rails.application.routes.draw do
     get 'focues_user/:uid/:fid',to:'users#focues_user',on: :collection
     get 'isFocues/:aid/:fid',to:'users#isFocues',on: :collection
     get 'user_score_article/:uid/:aid/:score',to:'users#user_score_article',on: :collection
+    get 'user_thumb_article/:uid/:aid',to:'users#user_thumb_article',on: :collection
+    get 'user_collect_article/:uid/:aid',to:'users#user_collect_article',on: :collection
     delete 'unfocues/:uid/:fid',to:'users#unfocues',on: :collection
     post 'uploadfile',to:'users#uploadfile',on: :collection
   end

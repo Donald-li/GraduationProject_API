@@ -153,7 +153,40 @@ class UsersController < ManageBaseController
     else
       render json:{msg:2}
     end
+  end
 
+  #用户给文章评分
+  def user_score_article
+    @user = User.find(params[:uid])
+    @article = Article.find(params[:aid])
+    score = params[:score]
+
+    @score_relation = ScoreRelation.new
+
+    @score_relation.user = @user
+    @score_relation.article = @article
+    @score_relation.score = score
+
+    if @score_relations = ScoreRelation.where("article_id = :aid and user_id = :uid",{aid:@article.id,uid:@user.id}).present?
+      render json:{msg:'您已经评价过啦！',flag:0}
+    else
+      if @score_relation.save
+        @score_relations = ScoreRelation.where("article_id = :aid",{aid:@article.id})
+        totalscore = 0
+        @score_relations.each do |sl|
+          totalscore += sl.score
+        end
+        avascore = totalscore/@score_relations.count
+        @article.score = avascore
+        if @article.save
+          render json:{msg:'评分成功！',flag:1}
+        else
+          render json:{msg:'评分保存失败！',flag:2}
+        end
+      else
+        render json:{msg:'评分失败！',flag:3}
+      end
+    end
   end
 
   private

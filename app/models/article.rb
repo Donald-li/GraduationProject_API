@@ -11,6 +11,8 @@
 class Article < ApplicationRecord
   belongs_to :user
 
+  has_many :score_relations,dependent: :destroy
+
   enum section: {movie:1,game:2,music:3,dance:4,food:5,comic:6}
 
   scope :sorted, -> {order(created_at: :desc)}

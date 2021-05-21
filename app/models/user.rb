@@ -12,6 +12,8 @@ class User < ApplicationRecord
   has_many :articles
   has_many :star_articles,class_name: "Article",foreign_key:"collector_id"
 
+  has_many :score_relations,dependent: :destroy
+
   has_many :focues_relations,dependent: :destroy
   has_many :followers,class_name: "FocuesRelation",foreign_key:"follower_id",dependent: :destroy
 

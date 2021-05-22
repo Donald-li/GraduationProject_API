@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2021_05_22_091517) do
+ActiveRecord::Schema.define(version: 2021_05_22_140547) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -55,6 +55,16 @@ ActiveRecord::Schema.define(version: 2021_05_22_091517) do
     t.index ["user_id"], name: "index_focues_relations_on_user_id"
   end
 
+  create_table "messages", force: :cascade do |t|
+    t.bigint "user_id", null: false
+    t.bigint "receiver_id"
+    t.text "body"
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.index ["receiver_id"], name: "index_messages_on_receiver_id"
+    t.index ["user_id"], name: "index_messages_on_user_id"
+  end
+
   create_table "score_relations", force: :cascade do |t|
     t.bigint "user_id", null: false
     t.bigint "article_id", null: false
@@ -89,6 +99,7 @@ ActiveRecord::Schema.define(version: 2021_05_22_091517) do
   add_foreign_key "collect_relations", "users"
   add_foreign_key "comments", "articles"
   add_foreign_key "comments", "users"
+  add_foreign_key "messages", "users"
   add_foreign_key "score_relations", "articles"
   add_foreign_key "score_relations", "users"
   add_foreign_key "thumb_relations", "articles"

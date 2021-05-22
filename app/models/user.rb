@@ -19,7 +19,10 @@ class User < ApplicationRecord
   has_many :comment,dependent: :destroy
 
   has_many :focues_relations,dependent: :destroy
-  has_many :followers,class_name: "FocuesRelation",foreign_key:"follower_id",dependent: :destroy
+  has_many :followers,class_name: "FocuesRelation",foreign_key:"follower_id"
+
+  has_many :messages,dependent: :destroy
+  has_many :receiver,class_name:'Message',foreign_key:'receiver_id'
 
   enum rule:{admin:1,normal:2}
 

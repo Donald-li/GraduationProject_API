@@ -301,7 +301,7 @@ class UsersController < ManageBaseController
     @user = User.find(params[:uid])
     @article = Article.find(params[:aid])
 
-    if CollectRelation.where("user_id = :uid and article_id = :aid",{uid:@user.id,aid:@article.id})
+    if CollectRelation.where("user_id = :uid and article_id = :aid",{uid:@user.id,aid:@article.id}).present?
       render json:{msg:'您已经收藏过啦！',flag:1}
     else
       render json:{msg:'还未收藏！',flag:2}

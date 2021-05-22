@@ -59,6 +59,16 @@ class ArticlesController < ManageBaseController
     render json:@articles.to_json(:include=>:user)
   end
 
+  #获得某文章的评论功能
+  def get_comment
+    @user = User.find(params[:uid])
+    @article = Article.find(params[:aid])
+
+    @comments = @article.comments.all
+
+    render json:@comments.to_json(:include => :user)
+  end
+
   #接收上传的图片
   def upload_img
     #获得前端传来的文件

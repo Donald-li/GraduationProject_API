@@ -15,6 +15,8 @@ class Article < ApplicationRecord
   has_many :thumb_relations,dependent: :destroy
   has_many :collect_relation,dependent: :destroy
 
+  has_many :comments,dependent: :destroy
+
   enum section: {movie:1,game:2,music:3,dance:4,food:5,comic:6}
 
   scope :sorted, -> {order(created_at: :desc)}

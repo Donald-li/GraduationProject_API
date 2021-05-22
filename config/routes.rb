@@ -5,6 +5,7 @@ Rails.application.routes.draw do
     post 'upload_img',to:'articles#upload_img',on: :collection
     get 'show_by_page_index',to:'articles#show_by_page_index',on: :collection
     get 'search/:array',to:'articles#search', on: :collection
+    get 'get_comment/:uid/:aid',to:'articles#get_comment', on: :collection
   end
   resources :users do
     resources :articles
@@ -30,6 +31,8 @@ Rails.application.routes.draw do
     delete 'unfocues/:uid/:fid',to:'users#unfocues',on: :collection
     post 'uploadfile',to:'users#uploadfile',on: :collection
   end
+
+  resources :comments
 
   get 'main/init/:title', to: 'main#init'
 end

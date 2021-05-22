@@ -5,4 +5,9 @@ class MainController < ManageBaseController
     render json: @article.to_json(:include => :user)
   end
 
+  def initSections
+    @article = Article.where(section:params[:title]).sorted_score
+    render json: @article.to_json(:include => :user)
+  end
+
 end

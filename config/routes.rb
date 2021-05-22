@@ -35,4 +35,5 @@ Rails.application.routes.draw do
   resources :comments
 
   get 'main/init/:title', to: 'main#init'
+  get 'main/initSections/:title', to: 'main#initSections'
 end

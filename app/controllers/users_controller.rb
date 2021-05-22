@@ -308,6 +308,20 @@ class UsersController < ManageBaseController
     end
   end
 
+  #用户获得所关注用户的动态方法
+  def active_user
+    @user = User.find(params[:uid])
+    @fl = @user.followers.all
+    focus = []
+    @fl.each do |fl|
+      focus<<fl.user.id
+    end
+    @articles = Article.where("user_id in (:users)",{users:focus}).limit(100).offset(0)
+
+    render json:@articles.to_json(:include => :user)
+
+  end
+
   private
   def get_user
     params.require(:ruleForm).permit(:pass,:account,:name,:rule,:img)

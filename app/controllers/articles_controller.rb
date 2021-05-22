@@ -14,9 +14,9 @@ class ArticlesController < ManageBaseController
     @article.score = 0
     @article.thumbs = 0
     if @article.save
-      render json: {'msg':'创建成功！'}
+      render json: {'msg':'发布成功！'}
     else
-      render json:{'msg':'创建失败！'}
+      render json:{'msg':'发布失败！'}
     end
   end
   def update

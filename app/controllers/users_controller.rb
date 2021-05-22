@@ -316,7 +316,7 @@ class UsersController < ManageBaseController
     @fl.each do |fl|
       focus<<fl.user.id
     end
-    @articles = Article.where("user_id in (:users)",{users:focus}).limit(100).offset(0)
+    @articles = Article.where("user_id in (:users)",{users:focus}).limit(100).offset(0).sorted
 
     render json:@articles.to_json(:include => :user)
 

@@ -85,6 +85,13 @@ class UsersController < ManageBaseController
     render json:@fl.to_json(:include => :user)
   end
 
+  #获取当前用户所关注用户列表(不分页)
+  def get_total_follow_user
+    @user = User.find(params[:id])
+    @fl= @user.followers.includes(:user).all
+    render json:@fl.to_json(:include => :user)
+  end
+
   #获取上传的文件
   def uploadfile
     #获得前端传来的文件
@@ -308,7 +315,7 @@ class UsersController < ManageBaseController
     end
   end
 
-  #用户获得所关注用户的动态方法
+  #用户获得所关注用户的动态的方法
   def active_user
     @user = User.find(params[:uid])
     @fl = @user.followers.all

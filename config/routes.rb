@@ -27,10 +27,12 @@ Rails.application.routes.draw do
     get 'isThumb/:uid/:aid',to:'users#isThumb',on: :collection
     get 'isCollect/:uid/:aid',to:'users#isCollect',on: :collection
     get 'active_user/:uid',to:'users#active_user',on: :collection
+    get 'get_messages_two_user/:uid/:rid',to:'users#get_messages_two_user',on: :collection
     delete 'uncollect/:uid/:aid',to:'users#uncollect',on: :collection
     delete 'unthumb/:uid/:aid',to:'users#unthumb',on: :collection
     delete 'unfocues/:uid/:fid',to:'users#unfocues',on: :collection
     post 'uploadfile',to:'users#uploadfile',on: :collection
+    post 'create_message',to:'users#create_message',on: :collection
   end
 
   resources :comments

@@ -89,7 +89,48 @@ class UsersController < ManageBaseController
   def get_total_follow_user
     @user = User.find(params[:id])
     @fl= @user.followers.includes(:user).all
-    render json:@fl.to_json(:include => :user)
+    @msgs = @user.messages.select(:receiver_id).all.distinct
+    users = []
+    @msgs.each do |msg|
+      users << User.find(msg.receiver_id)
+    end
+
+    @fl.each do |f|
+      if users.include? f.user
+      else
+        users << f.user
+      end
+    end
+    users.uniq
+    render json:users.to_json
+  end
+
+  #获取两个用户之间的沟通信息
+  def get_messages_two_user
+    @user = User.find(params[:uid])
+    @receiver = User.find(params[:rid])
+
+    @messages =  Message.where("user_id in (:users) and receiver_id in (:receivers)",{users:[@user.id,@receiver.id],receivers:[@user.id,@receiver.id]})
+
+    render json:@messages.to_json(:include => :receiver)
+
+  end
+
+  #创建新的消息
+  def create_message
+    @user = User.find(params[:uid])
+    @receiver = User.find(params[:rid])
+    body = params[:body]
+
+    @msg = @receiver.messages.new
+    @msg.receiver = @user
+    @msg.body = body
+
+    if @msg.save
+      render json:{flag:1}
+    else
+      render json:{flag:2}
+    end
   end
 
   #获取上传的文件

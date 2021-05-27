@@ -5,4 +5,12 @@
 class Message < ApplicationRecord
   belongs_to :user
   belongs_to :receiver,class_name:"User",foreign_key:'receiver_id'
+
+  enum state: {show:1,hidden:2}
+
+  before_save :default_value
+
+  def default_value
+    self.state = 1
+  end
 end

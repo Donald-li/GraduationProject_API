@@ -5,8 +5,6 @@
 # password      ：text          用户密码
 # rule          ：integer       用户角色      1：admin--管理员  2：normal--普通用户
 # img           ：text          用户头像
-# article       ：article       用户发表的文章
-# star_articles ：star_articles 用户收藏的文章
 
 class User < ApplicationRecord
   has_many :articles

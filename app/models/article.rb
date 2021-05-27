@@ -18,6 +18,7 @@ class Article < ApplicationRecord
   has_many :comments,dependent: :destroy
 
   enum section: {movie:1,game:2,music:3,dance:4,food:5,comic:6}
+  enum state: {show:1,hidden:2}
 
   scope :sorted, -> {order(created_at: :desc)}
   scope :reverse_sorted, -> {sorted.reverse_order}
@@ -25,8 +26,13 @@ class Article < ApplicationRecord
   scope :sorted_score, -> {order(score: :desc)}
   scope :reverse_sorted_score, -> {sorted.reverse_order}
 
+  before_save :default_value
+
   def self.find_by_page(offset,pagesize)
     self.limit(pagesize).offset(offset)
   end
 
+  def default_value
+    self.state = 2
+  end
 end

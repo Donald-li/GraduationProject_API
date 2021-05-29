@@ -8,7 +8,7 @@ class UsersController < ManageBaseController
 
   #分页获得用户列表
   def index_page
-    @users = User.where("rule = 1 or rule = 2").limit(params[:pagesize]).offset(params[:offset]).sort
+    @users = User.where("rule = 1 or rule = 2").limit(params[:pagesize]).offset(params[:offset]).order(created_at: :desc)
     total = User.count
     render json:{users:@users,total:total}
   end
@@ -402,10 +402,64 @@ class UsersController < ManageBaseController
     end
   end
 
-  #用户管理员模式模糊搜索
-  def search_user_group
-    @users = User.where("name in :uname or state = :state or ")
+  #改变用户角色
+  def changeRole
+    @user = User.find_by(id: params[:id])
+    @user.rule = params[:role]
+
+    if @user.save
+      render json:{msg:'修改成功！'}
+    else
+      render json:{msg:'修改失败！'}
+    end
   end
+
+  #用户管理员模式模糊搜索
+  # def search_user_group
+  #
+  #   uname = params[:uname]
+  #   state = params[:state]
+  #   start_time = params[:start_time]
+  #   end_time = params[:end_time]
+  #
+  #   if uname.blank?
+  #     if state.blank?
+  #       if start_time.blank?
+  #         @users = ''
+  #       else
+  #         @users = User.where("created_at between :start and :end",{start:start_time,end:end_time})
+  #       end
+  #     else
+  #       if start_time.blank?
+  #         @users = User.where("state = :state",{state:state})
+  #       else
+  #         @users = User.where("state = :state and created_at between :start and :end",{state:state,start:start_time,end:end_time})
+  #       end
+  #     end
+  #   else
+  #     if state.blank?
+  #       if start_time.blank?
+  #         @users = User.where("name like :uname",{uname:uname})
+  #       else
+  #         @users = User.where("name like :uname and created_at between :start and :end",{uname:uname,start:start_time,end:end_time})
+  #       end
+  #     else
+  #       if start_time.blank?
+  #         @users = User.where("name like :uname and state = :state",{uname:uname,state:state})
+  #       else
+  #         @users = User.where("name like :uname and state = :state and created_at between :start and :end",{uname:uname,state:state,start:start_time,end:end_time})
+  #       end
+  #     end
+  #   end
+  #
+  #   if @users.blank?
+  #     render json:{users:@users}
+  #   else
+  #     render json:{users:@users,total:@users.count}
+  #   end
+  #
+  #
+  # end
 
   private
   def get_user

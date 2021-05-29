@@ -12,7 +12,8 @@ Rails.application.routes.draw do
     post :login, on: :collection
     get :current_user, on: :collection
     get 'get_articles/:id/:offset/:pagesize',to:'users#get_articles', on: :collection
-    # get 'get_star_articles/:id',to:'users#get_star_articles',on: :collection
+    get 'changState/:id/:state',to:'users#changState', on: :collection
+    get 'index_page/:pagesize/:offset',to:'users#index_page',on: :collection
     get 'get_follow_user/:id/:offset/:pagesize',to:'users#get_follow_user',on: :collection
     get 'get_total_follow_user/:id',to:'users#get_total_follow_user',on: :collection
     get 'get_session_user/:id',to:'users#get_session_user',on: :collection

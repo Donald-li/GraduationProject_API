@@ -50,12 +50,12 @@ class ArticlesController < ManageBaseController
     offset = params[:offset]
     pagesize = param[:pagesize]
 
-    @articles = Article.all.find_by_page(offset,pagesize).reverse_sorted
+    @articles = Article.show.find_by_page(offset,pagesize).reverse_sorted
   end
 
   #搜索功能
   def search
-    @articles = Article.where("title like :array",{array:'%'+params[:array]+'%'})
+    @articles = Article.show.where("title like :array",{array:'%'+params[:array]+'%'})
     render json:@articles.to_json(:include=>:user)
   end
 
@@ -64,7 +64,7 @@ class ArticlesController < ManageBaseController
     @user = User.find(params[:uid])
     @article = Article.find(params[:aid])
 
-    @comments = @article.comments.all
+    @comments = @article.comments.show
 
     render json:@comments.to_json(:include => :user)
   end

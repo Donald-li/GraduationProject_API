@@ -33,6 +33,8 @@ class Article < ApplicationRecord
   end
 
   def default_value
-    self.state = 2
+    if self.state.blank?
+      self.state = 2
+    end
   end
 end

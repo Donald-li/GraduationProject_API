@@ -5,6 +5,14 @@ class UsersController < ManageBaseController
     @users = User.all
     render json:@users
   end
+
+  #分页获得用户列表
+  def index_page
+    @users = User.where("rule = 1 or rule = 2").limit(params[:pagesize]).offset(params[:offset]).sort
+    total = User.count
+    render json:{users:@users,total:total}
+  end
+
   def show
     @user = User.find(params[:id])
     render json:@user
@@ -18,12 +26,13 @@ class UsersController < ManageBaseController
     @user.img = get_user[:imageUrl]
     if User.find_by(name: @user.name).present?
       render json:{msg:'账号昵称已存在！'}
-    end
-    if User.find_by(account:@user.account).present?
-      render json:{msg:'账号已存在！'}
     else
-      @user.save
-      render json:{msg:'创建成功！'}
+      if User.find_by(account:@user.account).present?
+        render json:{msg:'账号已存在！'}
+      else
+        @user.save
+        render json:{msg:'创建成功！',id:User.last.id}
+      end
     end
   end
   def update
@@ -38,6 +47,17 @@ class UsersController < ManageBaseController
       render json: {'msg'=>'修改失败！'}
     end
   end
+
+  def destroy
+    @user = User.find_by(id:params[:id])
+
+    if @user.destroy
+      render json:{msg:'删除成功！'}
+    else
+      render json:{msg:'删除失败！'}
+    end
+  end
+
   def get_session_user
     begin
       @user = User.find(params[:id])
@@ -51,7 +71,7 @@ class UsersController < ManageBaseController
   def login
     @user = User.new
     begin
-      @user = User.find_by(account: params[:account])
+      @user = User.using.find_by(account: params[:account])
       @articles = @user.articles.all
       if @user.password != params[:password]
         render json:{msg:'密码错误！'}
@@ -370,9 +390,26 @@ class UsersController < ManageBaseController
 
   end
 
+  #改变用户的状态
+  def changState
+    @user = User.find_by(id: params[:id])
+    @user.state = params[:state]
+
+    if @user.save
+      render json:{msg:'修改成功！'}
+    else
+      render json:{msg:'修改失败！'}
+    end
+  end
+
+  #用户管理员模式模糊搜索
+  def search_user_group
+    @users = User.where("name in :uname or state = :state or ")
+  end
+
   private
   def get_user
-    params.require(:ruleForm).permit(:pass,:account,:name,:rule,:img)
+    params.require(:ruleForm).permit(:pass,:account,:name,:rule,:imageUrl)
   end
 
   private

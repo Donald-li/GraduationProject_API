@@ -11,6 +11,8 @@ class Message < ApplicationRecord
   before_save :default_value
 
   def default_value
-    self.state = 1
+    if self .state.blank?
+      self.state = 1
+    end
   end
 end

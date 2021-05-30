@@ -46,11 +46,35 @@ class ArticlesController < ManageBaseController
     render json:{"article":@article}
   end
 
+  #管理员分页获取文章
   def show_by_page_index
     offset = params[:offset]
-    pagesize = param[:pagesize]
+    pagesize = params[:pagesize]
 
-    @articles = Article.show.find_by_page(offset,pagesize).reverse_sorted
+    @articles = Article.find_by_page(offset,pagesize).sorted
+
+    render json:@articles.to_json(:include => :user)
+  end
+
+  #修改文章状态
+  def changeArticleState
+    @article = Article.find_by(id:params[:id])
+
+    @article.state = params[:value]
+
+    if @article.save
+      render json:{msg:'审批成功'}
+    else
+      render json:{msg:'审批失败'}
+    end
+
+  end
+
+  #获取所有文章总数
+  def get_total
+    total = Article.all.count
+
+    render json:{total:total}
   end
 
   #搜索功能

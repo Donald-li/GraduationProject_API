@@ -3,7 +3,9 @@ Rails.application.routes.draw do
 
   resources :articles do
     post 'upload_img',to:'articles#upload_img',on: :collection
-    get 'show_by_page_index',to:'articles#show_by_page_index',on: :collection
+    get 'get_total',to:'articles#get_total',on: :collection
+    get 'changeArticleState/:id/:value',to:'articles#changeArticleState',on: :collection
+    get 'show_by_page_index/:offset/:pagesize',to:'articles#show_by_page_index',on: :collection
     get 'search/:array',to:'articles#search', on: :collection
     get 'get_comment/:uid/:aid',to:'articles#get_comment', on: :collection
   end

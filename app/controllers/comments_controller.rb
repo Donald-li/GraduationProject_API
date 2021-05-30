@@ -15,4 +15,13 @@ class CommentsController < ApplicationController
       render json:{msg:'评论失败！',flag:2}
     end
   end
+
+  def destroy
+    @comment = Comment.find_by(id: params[:id])
+    if @comment.destroy
+      render json:{msg:'删除成功！'}
+    else
+      render json:{msg:'删除失败！'}
+    end
+  end
 end
